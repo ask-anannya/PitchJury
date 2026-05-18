@@ -398,10 +398,10 @@ CRITICAL RULES:
       setSession((prev) => ({ ...prev, simulationOutputs: [] }));
       await updateSession(sessionId, { simulation_outputs: [] });
 
-      // Batched parallel calls: groups of 8 personas max per batch
-      const BATCH_SIZE = 8;
+      // Batched parallel calls: groups of 3 personas max per batch to avoid rate limits
+      const BATCH_SIZE = 3;
+      const CALL_TIMEOUT = 120000; // 120s — matches edge function upstream timeout
       const simOutputs: SimulationOutput[] = [];
-      const CALL_TIMEOUT = 15000; // 15s timeout per call
 
       for (let batchStart = 0; batchStart < simPrompts.length; batchStart += BATCH_SIZE) {
         const batchEnd = Math.min(batchStart + BATCH_SIZE, simPrompts.length);
@@ -413,22 +413,23 @@ CRITICAL RULES:
         }));
 
         const batchResults = await Promise.all(
-          batch.map((prompt) =>
-            Promise.race([
-              callAiAction(prompt).then((text) => {
-                try {
-                  const clean = cleanJson(text);
-                  return JSON.parse(clean) as SimulationOutput;
-                } catch (parseErr) {
-                  console.error('Simulation JSON parse failed:', parseErr);
-                  return null;
-                }
-              }),
-              new Promise<null>((_, reject) =>
-                setTimeout(() => reject(new Error('timeout')), CALL_TIMEOUT)
-              ).catch(() => null),
-            ])
-          )
+          batch.map(async (prompt) => {
+            try {
+              const text = await Promise.race([
+                callAiAction(prompt),
+                new Promise<never>((_, reject) =>
+                  setTimeout(() => reject(new Error('timeout')), CALL_TIMEOUT)
+                ),
+              ]);
+              const clean = cleanJson(text);
+              const sim = JSON.parse(clean) as SimulationOutput;
+              return sim;
+            } catch (err) {
+              const msg = err instanceof Error ? err.message : String(err);
+              console.error(`Persona simulation failed (${batchStart + batch.indexOf(prompt) + 1}):`, msg);
+              return null;
+            }
+          })
         );
 
         const validBatch = batchResults.filter(Boolean) as SimulationOutput[];
@@ -442,8 +443,8 @@ CRITICAL RULES:
         await updateSession(sessionId, { simulation_outputs: simOutputs });
       }
 
-      // Completion gate: aggregation fires when at least 80% responded (or min 10)
-      const minRequired = Math.max(10, Math.ceil(totalPersonas * 0.8));
+      // Completion gate: aggregation fires when at least 60% responded (or min 5)
+      const minRequired = Math.max(5, Math.ceil(totalPersonas * 0.6));
       if (simOutputs.length < minRequired) {
         console.warn(`Simulation incomplete: ${simOutputs.length}/${totalPersonas} — skipping aggregation`);
         throw new Error(`Simulation incomplete: only ${simOutputs.length} of ${totalPersonas} personas responded. Please try again.`);
