@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
-const messages = [
+const DEFAULT_MESSAGES = [
   'Assembling your panel...',
   'The panel is reading your document...',
   'Computing weighted scores and kill criteria...',
@@ -9,44 +9,47 @@ const messages = [
   'Finalising the verdict...',
 ];
 
-const MESSAGE_INTERVAL = 2500; // 2.5 seconds per message
-const TOTAL_DURATION = messages.length * MESSAGE_INTERVAL; // 15 seconds
-const PROGRESS_DURATION = 20000; // 20 seconds to fill progress bar
+interface LoadingTickerProps {
+  message?: string;
+  current?: number;
+  total?: number;
+}
 
-export default function LoadingTicker() {
+export default function LoadingTicker({ message, current, total }: LoadingTickerProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
-  const [progress, setProgress] = useState(0);
-  const [startTime] = useState(Date.now());
+  const [tick, setTick] = useState(0);
 
+  const displayMessage = message || DEFAULT_MESSAGES[currentIndex];
+  const hasRealProgress = current !== undefined && total !== undefined && total > 0;
+  const realProgress = hasRealProgress ? Math.min((current / total) * 100, 100) : 0;
+
+  // Fake progress for when no real progress is provided
   useEffect(() => {
-    const messageInterval = setInterval(() => {
+    const timer = setInterval(() => setTick(Date.now()), 100);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Cycle through default messages when no real message is provided
+  useEffect(() => {
+    if (message) return;
+    const interval = setInterval(() => {
       setIsVisible(false);
       setTimeout(() => {
-        setCurrentIndex((prev) => {
-          const next = (prev + 1) % messages.length;
-          return next;
-        });
+        setCurrentIndex((prev) => (prev + 1) % DEFAULT_MESSAGES.length);
         setIsVisible(true);
-      }, 350); // fade out duration
-    }, MESSAGE_INTERVAL);
+      }, 350);
+    }, 2500);
+    return () => clearInterval(interval);
+  }, [message]);
 
-    const progressInterval = setInterval(() => {
-      const elapsed = Date.now() - startTime;
-      const pct = Math.min((elapsed / PROGRESS_DURATION) * 100, 100);
-      setProgress(pct);
-    }, 50);
-
-    return () => {
-      clearInterval(messageInterval);
-      clearInterval(progressInterval);
-    };
-  }, [startTime]);
+  const fakeProgress = hasRealProgress
+    ? 0
+    : Math.min(((tick % 20000) / 20000) * 100, 100);
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background">
       <div className="flex items-center gap-3 mb-6">
-        {/* Spinning gold circle */}
         <div
           className="w-3.5 h-3.5 rounded-full border-2 border-primary border-r-transparent animate-spin"
           style={{ animationDuration: '1s' }}
@@ -58,19 +61,26 @@ export default function LoadingTicker() {
             fontFamily: "'EB Garamond', Georgia, serif",
           }}
         >
-          {messages[currentIndex]}
+          {displayMessage}
         </span>
       </div>
-      {/* Progress bar */}
       <div
         className="h-0.5 rounded-full overflow-hidden"
         style={{ width: 280, background: 'rgba(201,168,76,0.15)' }}
       >
         <div
           className="h-full rounded-full bg-primary"
-          style={{ width: `${progress}%`, transition: 'width 50ms linear' }}
+          style={{
+            width: `${hasRealProgress ? realProgress : fakeProgress}%`,
+            transition: 'width 300ms ease',
+          }}
         />
       </div>
+      {hasRealProgress && (
+        <div className="mt-2 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+          {current} of {total} completed
+        </div>
+      )}
     </div>
   );
 }

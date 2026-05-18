@@ -73,7 +73,15 @@ export default function SetupPage() {
   const panel = getPanelByKey(session.audienceCategory);
 
   if (isRunningFocusGroup) {
-    return <LoadingTicker />;
+    const totalPersonas = panel?.personas.length || 0;
+    const completed = session.simulationOutputs.length;
+    return (
+      <LoadingTicker
+        message={session.loadingMessage || undefined}
+        current={completed > 0 ? completed : undefined}
+        total={totalPersonas > 0 ? totalPersonas : undefined}
+      />
+    );
   }
 
   if (showMeetPanel && panel) {

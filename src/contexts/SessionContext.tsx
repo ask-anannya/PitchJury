@@ -398,31 +398,53 @@ CRITICAL RULES:
       setSession((prev) => ({ ...prev, simulationOutputs: [] }));
       await updateSession(sessionId, { simulation_outputs: [] });
 
-      // Sequential calls that append to simulation_outputs — never replace
+      // Batched parallel calls: groups of 8 personas max per batch
+      const BATCH_SIZE = 8;
       const simOutputs: SimulationOutput[] = [];
-      for (let i = 0; i < simPrompts.length; i++) {
+      const CALL_TIMEOUT = 15000; // 15s timeout per call
+
+      for (let batchStart = 0; batchStart < simPrompts.length; batchStart += BATCH_SIZE) {
+        const batchEnd = Math.min(batchStart + BATCH_SIZE, simPrompts.length);
+        const batch = simPrompts.slice(batchStart, batchEnd);
+
         setSession((prev) => ({
           ...prev,
-          loadingMessage: `Reading your document (${i + 1} of ${totalPersonas})...`,
+          loadingMessage: `Reading your document (${Math.min(batchEnd, totalPersonas)} of ${totalPersonas})...`,
         }));
-        try {
-          const text = await callAiAction(simPrompts[i]);
-          const clean = cleanJson(text);
-          const sim = JSON.parse(clean) as SimulationOutput;
-          simOutputs.push(sim);
-          // Append to state — never replace
-          setSession((prev) => ({
-            ...prev,
-            simulationOutputs: [...prev.simulationOutputs, sim],
-          }));
-          await updateSession(sessionId, { simulation_outputs: simOutputs });
-        } catch (err) {
-          console.error(`Simulation call ${i + 1} failed:`, err);
-        }
+
+        const batchResults = await Promise.all(
+          batch.map((prompt) =>
+            Promise.race([
+              callAiAction(prompt).then((text) => {
+                try {
+                  const clean = cleanJson(text);
+                  return JSON.parse(clean) as SimulationOutput;
+                } catch (parseErr) {
+                  console.error('Simulation JSON parse failed:', parseErr);
+                  return null;
+                }
+              }),
+              new Promise<null>((_, reject) =>
+                setTimeout(() => reject(new Error('timeout')), CALL_TIMEOUT)
+              ).catch(() => null),
+            ])
+          )
+        );
+
+        const validBatch = batchResults.filter(Boolean) as SimulationOutput[];
+        simOutputs.push(...validBatch);
+
+        // Append to state — never replace
+        setSession((prev) => ({
+          ...prev,
+          simulationOutputs: [...prev.simulationOutputs, ...validBatch],
+        }));
+        await updateSession(sessionId, { simulation_outputs: simOutputs });
       }
 
-      // Completion gate: aggregation must not fire until all outputs collected
-      if (simOutputs.length !== totalPersonas) {
+      // Completion gate: aggregation fires when at least 80% responded (or min 10)
+      const minRequired = Math.max(10, Math.ceil(totalPersonas * 0.8));
+      if (simOutputs.length < minRequired) {
         console.warn(`Simulation incomplete: ${simOutputs.length}/${totalPersonas} — skipping aggregation`);
         throw new Error(`Simulation incomplete: only ${simOutputs.length} of ${totalPersonas} personas responded. Please try again.`);
       }
@@ -440,13 +462,13 @@ CRITICAL RULES:
         all_roast_outputs: legacyRoasts,
       });
 
-      // AI Action 2: Quantitative Aggregation — only fires when all sim outputs collected
+      // AI Action 2: Quantitative Aggregation — only fires when sufficient sim outputs collected
       setSession((prev) => ({ ...prev, loadingMessage: 'Computing weighted scores and kill criteria...' }));
-      const aggregatePrompt = `You are a quantitative analyst. You have received simulation outputs from ${totalPersonas} professional personas who evaluated the following document.
+      const aggregatePrompt = `You are a quantitative analyst. You have received simulation outputs from ${simOutputs.length} professional personas who evaluated the following document.
 
 Simulation outputs:
 ---
-${JSON.stringify(validSims)}
+${JSON.stringify(simOutputs)}
 ---
 
 Compute the following aggregated statistics and return them as JSON only. No preamble, no markdown fences.
@@ -546,21 +568,21 @@ COMPUTATION RULES:
         quantData = JSON.parse(aggregateClean);
       } catch {
         // Fallback computation
-        const scores = validSims.map((s) => s.quantitative.score);
+        const scores = simOutputs.map((s) => s.quantitative.score);
         const avg = scores.length ? scores.reduce((a, b) => a + b, 0) / scores.length : 0;
-        const weights = validSims.map((s) => s.weight_pct);
+        const weights = simOutputs.map((s) => s.weight_pct);
         const weightSum = weights.reduce((a, b) => a + b, 0) || 1;
-        const weightedAvg = validSims.reduce((sum, s) => sum + s.quantitative.score * s.weight_pct, 0) / weightSum;
+        const weightedAvg = simOutputs.reduce((sum, s) => sum + s.quantitative.score * s.weight_pct, 0) / weightSum;
         const mean = avg;
         const variance = scores.reduce((sum, s) => sum + Math.pow(s - mean, 2), 0) / scores.length;
         const stdDev = Math.sqrt(variance);
         let alignment = 'moderate';
         if (stdDev < 1.0) alignment = 'aligned';
         else if (stdDev > 1.8) alignment = 'split';
-        const proceedCount = validSims.filter((s) => s.quantitative.would_proceed_to_next_step).length;
-        const proceedRate = Math.round((proceedCount / validSims.length) * 100);
-        const approvalLikelihoods = validSims.map((s) => s.quantitative.investment_or_approval_likelihood);
-        const weightedApproval = validSims.reduce((sum, s) => sum + s.quantitative.investment_or_approval_likelihood * s.weight_pct, 0) / weightSum;
+        const proceedCount = simOutputs.filter((s) => s.quantitative.would_proceed_to_next_step).length;
+        const proceedRate = Math.round((proceedCount / simOutputs.length) * 100);
+        const approvalLikelihoods = simOutputs.map((s) => s.quantitative.investment_or_approval_likelihood);
+        const weightedApproval = simOutputs.reduce((sum, s) => sum + s.quantitative.investment_or_approval_likelihood * s.weight_pct, 0) / weightSum;
 
         quantData = {
           aggregate_score: Math.round(avg * 10) / 10,
