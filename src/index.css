@@ -1,0 +1,113 @@
+/* stylelint-disable */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('https://resource-static.bj.bcebos.com/fonts/Montserrat-VariableFont_wght.woff2') format('woff2');
+  font-display: swap;
+}
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here.
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --radius: 0.5rem;
+    --background: 40 38% 93%;
+    --foreground: 218 51% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 218 51% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 218 51% 10%;
+    --primary: 44 54% 54%;
+    --primary-foreground: 218 51% 10%;
+    --secondary: 40 30% 88%;
+    --secondary-foreground: 218 51% 10%;
+    --muted: 40 15% 90%;
+    --muted-foreground: 210 17% 60%;
+    --accent: 40 40% 92%;
+    --accent-foreground: 218 51% 10%;
+    --destructive: 0 62% 55%;
+    --border: 40 20% 85%;
+    --input: 40 20% 85%;
+    --ring: 44 54% 54%;
+    --chart-1: 44 54% 54%;
+    --chart-2: 40 38% 80%;
+    --chart-3: 218 51% 30%;
+    --chart-4: 210 17% 60%;
+    --chart-5: 40 30% 70%;
+    --sidebar-background: 40 30% 96%;
+    --sidebar-foreground: 218 51% 15%;
+    --sidebar-primary: 44 54% 54%;
+    --sidebar-primary-foreground: 218 51% 10%;
+    --sidebar-accent: 40 30% 92%;
+    --sidebar-accent-foreground: 218 51% 10%;
+    --sidebar-border: 40 20% 88%;
+    --sidebar-ring: 44 54% 54%;
+    --destructive-foreground: 0 0% 100%;
+    --shadow-card: 0 2px 12px hsla(40, 30%, 50%, 0.08);
+    --shadow-hover: 0 4px 20px hsla(40, 30%, 50%, 0.12);
+  }
+
+  .dark {
+    --background: 218 51% 10%;
+    --foreground: 40 38% 93%;
+    --card: 218 45% 13%;
+    --card-foreground: 40 38% 93%;
+    --popover: 218 45% 13%;
+    --popover-foreground: 40 38% 93%;
+    --primary: 44 54% 54%;
+    --primary-foreground: 218 51% 10%;
+    --secondary: 218 30% 18%;
+    --secondary-foreground: 40 38% 93%;
+    --muted: 218 30% 18%;
+    --muted-foreground: 210 17% 60%;
+    --accent: 44 30% 20%;
+    --accent-foreground: 40 38% 93%;
+    --destructive: 0 62.8% 45%;
+    --border: 218 30% 25%;
+    --input: 218 30% 25%;
+    --ring: 44 54% 54%;
+    --chart-1: 44 54% 54%;
+    --chart-2: 44 40% 40%;
+    --chart-3: 210 17% 60%;
+    --chart-4: 218 30% 30%;
+    --chart-5: 40 20% 70%;
+    --sidebar-background: 218 45% 13%;
+    --sidebar-foreground: 40 38% 93%;
+    --sidebar-primary: 44 54% 54%;
+    --sidebar-primary-foreground: 218 51% 10%;
+    --sidebar-accent: 218 30% 18%;
+    --sidebar-accent-foreground: 40 38% 93%;
+    --sidebar-border: 218 30% 25%;
+    --sidebar-ring: 44 54% 54%;
+    --destructive-foreground: 0 0% 100%;
+    --shadow-card: 0 2px 12px hsla(0, 0%, 0%, 0.25);
+    --shadow-hover: 0 4px 20px hsla(0, 0%, 0%, 0.35);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border font-montserrat;
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--border)) transparent;
+  }
+  
+  *::-webkit-scrollbar {
+    width: 6px;
+    background: transparent;
+  }
+  
+  *::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 3px;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
