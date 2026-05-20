@@ -1,10 +1,8 @@
 import * as pdfjs from 'pdfjs-dist';
 import { createWorker } from 'tesseract.js';
-// @ts-ignore
-import pdfWorker from 'pdfjs-dist/build/pdf.worker.mjs?url';
 
-// Set up pdf.js worker
-pdfjs.GlobalWorkerOptions.workerSrc = pdfWorker;
+// Use stable public-path worker to avoid Vite ?url import issues in production
+pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.mjs';
 
 export interface ExtractionResult {
   text: string;
