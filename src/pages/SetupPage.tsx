@@ -97,12 +97,11 @@ export default function SetupPage() {
   return (
     <div className="container max-w-5xl py-12 space-y-10 animate-in fade-in duration-700">
       <div className="text-center space-y-3">
-        <h1 className="text-4xl font-bold tracking-tight text-balance">Roast My Deck</h1>
+        <h1 className="text-4xl font-bold tracking-tight text-balance">{"Pitch Jury"}</h1>
         <p className="text-muted-foreground text-lg max-w-2xl mx-auto text-pretty">
           Upload your pitch deck, resume, or proposal and get honest feedback from a panel of professionals.
         </p>
       </div>
-
       {/* PDF Upload */}
       <Card className="border-dashed border-2 shadow-card bg-card">
         <CardContent className="pt-6">
@@ -146,7 +145,6 @@ export default function SetupPage() {
           )}
         </CardContent>
       </Card>
-
       {/* Extracted Text */}
       {localText && (
         <div className="space-y-3 animate-in fade-in duration-500">
@@ -161,7 +159,6 @@ export default function SetupPage() {
           />
         </div>
       )}
-
       {/* Audience Selector */}
       <div className="space-y-4">
         <div className="flex items-center gap-2">
@@ -196,7 +193,6 @@ export default function SetupPage() {
           ))}
         </div>
       </div>
-
       {/* Harshness Dial */}
       <div className="space-y-4">
         <div className="flex items-center gap-2">
@@ -216,7 +212,6 @@ export default function SetupPage() {
           ))}
         </div>
       </div>
-
       {/* Run Focus Group */}
       <div className="flex justify-center pt-4">
         <Button
