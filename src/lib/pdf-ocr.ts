@@ -1,9 +1,3 @@
-import * as pdfjs from 'pdfjs-dist';
-import { createWorker } from 'tesseract.js';
-
-// Use a .js extension to avoid MIME-type issues with .mjs in some hosting environments
-pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.js';
-
 export interface ExtractionResult {
   text: string;
   isOcr: boolean;
@@ -20,61 +14,51 @@ export async function extractTextFromPdf(
   onProgress?: ProgressCallback
 ): Promise<ExtractionResult> {
   try {
+    onProgress?.(10, "Uploading PDF...");
+
     const arrayBuffer = await file.arrayBuffer();
-    // pdfjs-dist v4 expects a Uint8Array inside the data option
-    const loadingTask = pdfjs.getDocument({ data: new Uint8Array(arrayBuffer) });
-    const pdf = await loadingTask.promise;
-    const numPages = pdf.numPages;
-    let fullText = '';
-    let needsOcr = false;
-    let worker: any = null;
+    const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/extract-pdf`;
+    const apiKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-    for (let i = 1; i <= numPages; i++) {
-      onProgress?.((i / numPages) * 0.5, `Processing page ${i} of ${numPages}...`);
-      const page = await pdf.getPage(i);
-      const textContent = await page.getTextContent();
-      const pageText = textContent.items
-        .map((item: any) => item.str)
-        .join(' ');
+    onProgress?.(30, "Extracting text...");
 
-      if (pageText.trim().length > 0) {
-        fullText += pageText + '\n\n';
-      } else {
-        needsOcr = true;
-        const viewport = page.getViewport({ scale: 2.0 });
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        if (!context) continue;
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+        "Content-Type": "application/octet-stream",
+      },
+      body: arrayBuffer,
+    });
 
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
+    onProgress?.(80, "Processing response...");
 
-        await page.render({ canvasContext: context, viewport }).promise;
-
-        onProgress?.(0.5 + (i / numPages) * 0.5, `Performing OCR on page ${i}...`);
-
-        if (!worker) {
-          worker = await createWorker('eng');
-        }
-        const { data: { text } } = await worker.recognize(canvas);
-
-        fullText += text + '\n\n';
-      }
+    if (!response.ok) {
+      const errText = await response.text().catch(() => "");
+      throw new Error(`Server error ${response.status}: ${errText || response.statusText}`);
     }
 
-    if (worker) {
-      await worker.terminate();
+    const data = await response.json();
+
+    if (data.error) {
+      return {
+        text: "",
+        isOcr: false,
+        pageCount: 0,
+        error: data.error,
+      };
     }
+
+    onProgress?.(100, "Extraction complete");
 
     return {
-      text: fullText.trim(),
-      isOcr: needsOcr,
-      pageCount: numPages,
+      text: data.text || "",
+      isOcr: data.isOcr || false,
+      pageCount: data.pageCount || 0,
     };
   } catch (err: any) {
-    // Return the error so the UI can show a helpful fallback
     return {
-      text: '',
+      text: "",
       isOcr: false,
       pageCount: 0,
       error: err?.message || String(err),
