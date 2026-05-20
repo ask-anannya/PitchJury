@@ -42,15 +42,17 @@ export default function ExtractorPage() {
         setStatusMessage(msg);
       });
 
-      if (!extractionResult.text) {
+      if (extractionResult.error) {
+        toast.error(`Extraction failed: ${extractionResult.error}`);
+      } else if (!extractionResult.text) {
         toast.warning('No text content found in the PDF');
       } else {
         toast.success('Text extracted successfully');
       }
       setResult(extractionResult);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Extraction error:', error);
-      toast.error('Failed to extract text from PDF');
+      toast.error(`Failed to extract text from PDF: ${error?.message || String(error)}`);
     } finally {
       setIsProcessing(false);
       setProgress(100);

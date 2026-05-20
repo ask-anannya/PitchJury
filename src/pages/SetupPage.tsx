@@ -38,11 +38,15 @@ export default function SetupPage() {
         setExtractProgress(Math.round(p * 100));
         setExtractStatus(msg);
       });
-      setLocalText(result.text);
-      setDocumentText(result.text);
-      toast.success('Text extracted successfully');
-    } catch {
-      toast.error('Failed to extract text from PDF');
+      if (result.error) {
+        toast.error(`Extraction failed: ${result.error}`);
+      } else if (result.text) {
+        setLocalText(result.text);
+        setDocumentText(result.text);
+        toast.success('Text extracted successfully');
+      }
+    } catch (err: any) {
+      toast.error(`Failed to extract text from PDF: ${err?.message || String(err)}`);
     } finally {
       setIsExtracting(false);
     }
@@ -145,20 +149,18 @@ export default function SetupPage() {
           )}
         </CardContent>
       </Card>
-      {/* Extracted Text */}
-      {localText && (
-        <div className="space-y-3 animate-in fade-in duration-500">
-          <label className="text-sm font-medium text-muted-foreground">
-            Review extracted text — correct any errors before proceeding
-          </label>
-          <Textarea
-            value={localText}
-            onChange={(e) => handleTextChange(e.target.value)}
-            className="min-h-[300px] font-mono text-sm resize-none"
-            placeholder="No text extracted..."
-          />
-        </div>
-      )}
+      {/* Document Text */}
+      <div className="space-y-3 animate-in fade-in duration-500">
+        <label className="text-sm font-medium text-muted-foreground">
+          {localText ? 'Review extracted text — correct any errors before proceeding' : 'Paste your document text here, or upload a PDF above'}
+        </label>
+        <Textarea
+          value={localText}
+          onChange={(e) => handleTextChange(e.target.value)}
+          className="min-h-[300px] font-mono text-sm resize-none"
+          placeholder="Paste your pitch deck, resume, or proposal text here..."
+        />
+      </div>
       {/* Audience Selector */}
       <div className="space-y-4">
         <div className="flex items-center gap-2">
