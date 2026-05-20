@@ -20,7 +20,7 @@ export interface AudiencePanel {
 const seed_investors: AudiencePanel = {
   key: "seed_investors",
   label: "Seed Investors",
-  image: "https://miaoda-conversation-file.s3cdn.medo.dev/user-bkod68nngr28/app-bn2wrjsgz11d/20260518/seed invest.png",
+  image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/seed_investors.jpg",
   personas: [
     {
       key: "yc_p1",
@@ -30,7 +30,7 @@ const seed_investors: AudiencePanel = {
       weight_pct: 10.8,
       background: "YC partner, 8 years, backed 200+ companies across B2B SaaS and developer tools. Stanford CS. Former founder.",
       evaluation_lens: "Evaluates founder-market fit, market size credibility, product differentiation, and team completeness. Highest weight on team and market.",
-      image: "https://miaoda-conversation-file.s3cdn.medo.dev/user-bkod68nngr28/app-bn2wrjsgz11d/20260518/YC partner.png",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/yc_p1.jpg",
       isRepresentative: true,
     },
     {
@@ -41,7 +41,7 @@ const seed_investors: AudiencePanel = {
       weight_pct: 8.6,
       background: "YC partner specialising in B2B software. Previously operator at Stripe and Twilio. MBA Wharton.",
       evaluation_lens: "Weights GTM motion and enterprise readiness heavily. Sceptical of pure PLG without clear enterprise path.",
-      image: "",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/yc_p2.jpg",
       isRepresentative: false,
     },
     {
@@ -52,7 +52,7 @@ const seed_investors: AudiencePanel = {
       weight_pct: 9.7,
       background: "Sold B2B legal workflow company for $45M. Now angels in legal tech and enterprise software.",
       evaluation_lens: "Deep domain expertise in legal workflows. Evaluates product accuracy claims, SMB sales motion, and customer acquisition assumptions with high scrutiny.",
-      image: "https://miaoda-conversation-file.s3cdn.medo.dev/user-bkod68nngr28/app-bn2wrjsgz11d/20260518/angel with operator background (2).png",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/angel_p1.jpg",
       isRepresentative: true,
     },
     {
@@ -63,7 +63,7 @@ const seed_investors: AudiencePanel = {
       weight_pct: 7.5,
       background: "10 years enterprise sales at Palantir. Understands how AI products sell into regulated industries.",
       evaluation_lens: "Evaluates enterprise sales cycle assumptions, security and compliance positioning, and whether the team can close large deals.",
-      image: "",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/angel_p2.jpg",
       isRepresentative: false,
     },
     {
@@ -74,7 +74,7 @@ const seed_investors: AudiencePanel = {
       weight_pct: 8.6,
       background: "First cheque investor, 60+ pre-seed investments. Backs contrarian founders with non-obvious insights.",
       evaluation_lens: "Evaluates narrative sharpness and whether the insight behind the business is genuinely non-obvious. Penalises boilerplate why-now framing.",
-      image: "https://miaoda-conversation-file.s3cdn.medo.dev/user-bkod68nngr28/app-bn2wrjsgz11d/20260518/first-cheque (1).png",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/fc_p1.jpg",
       isRepresentative: true,
     },
     {
@@ -85,7 +85,7 @@ const seed_investors: AudiencePanel = {
       weight_pct: 6.5,
       background: "Pre-seed investor with portfolio in legal tech, compliance, and RegTech. JD from Yale, never practised.",
       evaluation_lens: "Evaluates domain depth, regulatory awareness, and whether the founder understands the legal market's procurement dynamics.",
-      image: "",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/fc_p2.jpg",
       isRepresentative: false,
     },
     {
@@ -96,7 +96,7 @@ const seed_investors: AudiencePanel = {
       weight_pct: 9.7,
       background: "Investment analyst at top-tier VC, responsible for finding every flaw before IC meetings. Has killed 40+ deals.",
       evaluation_lens: "Finds mathematical inconsistencies, unsourced claims, and unverifiable metrics. Highest scrutiny on financial projections and market sizing methodology.",
-      image: "https://miaoda-conversation-file.s3cdn.medo.dev/user-bkod68nngr28/app-bn2wrjsgz11d/20260518/devils advocate.png",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/da_p1.jpg",
       isRepresentative: true,
     },
     {
@@ -107,7 +107,7 @@ const seed_investors: AudiencePanel = {
       weight_pct: 7.5,
       background: "VC associate specialising in competitive landscape analysis. Has mapped the legal AI market exhaustively.",
       evaluation_lens: "Evaluates competitive moat, unnamed competitors, and whether the differentiation claimed would survive a well-funded attack.",
-      image: "",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/da_p2.jpg",
       isRepresentative: false,
     },
     {
@@ -118,7 +118,7 @@ const seed_investors: AudiencePanel = {
       weight_pct: 8.6,
       background: "PhD ML Stanford. 15 years between research and investing. Has evaluated 200+ AI companies.",
       evaluation_lens: "Evaluates model architecture, training data quality, accuracy claim methodology, and whether the technical moat is real or reproducible.",
-      image: "https://miaoda-conversation-file.s3cdn.medo.dev/user-bkod68nngr28/app-bn2wrjsgz11d/20260518/technical co investor.png",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/tech_p1.jpg",
       isRepresentative: true,
     },
     {
@@ -129,7 +129,7 @@ const seed_investors: AudiencePanel = {
       weight_pct: 6.5,
       background: "Former NLP researcher at DeepMind. Invests in applied AI companies with genuine technical differentiation.",
       evaluation_lens: "Evaluates NLP architecture specifics, fine-tuning approach, and whether 'trained on 2M documents' represents a real moat.",
-      image: "",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/tech_p2.jpg",
       isRepresentative: false,
     },
     {
@@ -140,7 +140,7 @@ const seed_investors: AudiencePanel = {
       weight_pct: 8.6,
       background: "Former McKinsey market sizing practice. Has built bottom-up market models for 300+ companies.",
       evaluation_lens: "Rejects top-down TAM/SAM/SOM methodology. Demands bottom-up unit economics and customer count derivation.",
-      image: "https://miaoda-site-img.s3cdn.medo.dev/images/KLing_dfd08014-4235-462b-8049-fa79247ec7ec.jpg",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/mkt_p1.jpg",
       isRepresentative: true,
     },
     {
@@ -151,7 +151,7 @@ const seed_investors: AudiencePanel = {
       weight_pct: 7.5,
       background: "Investor focused on market timing. Has seen multiple legal tech waves and knows why previous ones failed.",
       evaluation_lens: "Evaluates whether the timing rationale is genuine or retrofitted, and what specifically makes now different from 3 years ago.",
-      image: "",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/mkt_p2.jpg",
       isRepresentative: false,
     },
   ],
@@ -160,7 +160,7 @@ const seed_investors: AudiencePanel = {
 const enterprise_buyers: AudiencePanel = {
   key: "enterprise_buyers",
   label: "Enterprise Buyers",
-  image: "https://miaoda-conversation-file.s3cdn.medo.dev/user-bkod68nngr28/app-bn2wrjsgz11d/20260518/enterprise buyers.png",
+  image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/enterprise_buyers.jpg",
   personas: [
     {
       key: "vpe_p1",
@@ -170,7 +170,7 @@ const enterprise_buyers: AudiencePanel = {
       weight_pct: 11.4,
       background: "VP Engineering at a 600-person B2B SaaS company. Has evaluated 50+ vendor tools. Manages 80 engineers.",
       evaluation_lens: "Evaluates integration complexity, API quality, security model, and whether this genuinely reduces engineering burden.",
-      image: "https://miaoda-conversation-file.s3cdn.medo.dev/user-bkod68nngr28/app-bn2wrjsgz11d/20260518/vp of engineering.png",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/vpe_p1.jpg",
       isRepresentative: true,
     },
     {
@@ -181,7 +181,7 @@ const enterprise_buyers: AudiencePanel = {
       weight_pct: 9.1,
       background: "VP Engineering at a 120-person Series B. Tight budget, vendor-sceptical, has been burned by AI tools that overpromised.",
       evaluation_lens: "Weights implementation timeline and actual vs. claimed accuracy. Sceptical of AI accuracy claims without methodology.",
-      image: "",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/vpe_p2.jpg",
       isRepresentative: false,
     },
     {
@@ -192,7 +192,7 @@ const enterprise_buyers: AudiencePanel = {
       weight_pct: 11.4,
       background: "CFO of a 400-person software company. Manages $2M annual software budget. Evaluates every vendor on TCO.",
       evaluation_lens: "Evaluates total cost of ownership, payback period, and whether the ROI claim survives a finance committee.",
-      image: "https://miaoda-conversation-file.s3cdn.medo.dev/user-bkod68nngr28/app-bn2wrjsgz11d/20260518/cfo.png",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/cfo_p1.jpg",
       isRepresentative: true,
     },
     {
@@ -203,7 +203,7 @@ const enterprise_buyers: AudiencePanel = {
       weight_pct: 9.1,
       background: "CFO preparing company for IPO. Cost discipline is paramount. Every vendor contract is scrutinised for contractual risk.",
       evaluation_lens: "Evaluates contract terms, auto-renewal risk, price escalation clauses, and exit provisions.",
-      image: "",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/cfo_p2.jpg",
       isRepresentative: false,
     },
     {
@@ -214,7 +214,7 @@ const enterprise_buyers: AudiencePanel = {
       weight_pct: 11.4,
       background: "CISO at a financial services company. Has rejected 30+ vendors for failing security review. SOC 2 and ISO 27001 non-negotiable.",
       evaluation_lens: "Evaluates data residency, encryption at rest and in transit, access controls, compliance certifications, and breach liability.",
-      image: "https://miaoda-conversation-file.s3cdn.medo.dev/user-bkod68nngr28/app-bn2wrjsgz11d/20260518/ciso.png",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/ciso_p1.jpg",
       isRepresentative: true,
     },
     {
@@ -225,7 +225,7 @@ const enterprise_buyers: AudiencePanel = {
       weight_pct: 9.1,
       background: "CISO in healthcare. Understands regulated data environments. Contract data contains highly sensitive business information.",
       evaluation_lens: "Evaluates data handling for sensitive contract content, third-party subprocessor risk, and incident response procedures.",
-      image: "",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/ciso_p2.jpg",
       isRepresentative: false,
     },
     {
@@ -236,7 +236,7 @@ const enterprise_buyers: AudiencePanel = {
       weight_pct: 10.2,
       background: "Head of procurement at a 500-person company. Has negotiated 200+ vendor contracts. Knows every lock-in tactic.",
       evaluation_lens: "Evaluates pricing transparency, lock-in mechanisms, data portability, exit rights, and whether the proposal gives the buyer leverage.",
-      image: "https://miaoda-conversation-file.s3cdn.medo.dev/user-bkod68nngr28/app-bn2wrjsgz11d/20260518/procurement lead.png",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/proc_p1.jpg",
       isRepresentative: true,
     },
     {
@@ -247,7 +247,7 @@ const enterprise_buyers: AudiencePanel = {
       weight_pct: 10.2,
       background: "Solo in-house lawyer at a fast-growing tech company. Reviews 40+ contracts per month. Technically comfortable.",
       evaluation_lens: "Evaluates whether the product actually fits into his workflow, whether the AI output is trustworthy enough to act on, and whether it saves real time.",
-      image: "https://miaoda-conversation-file.s3cdn.medo.dev/user-bkod68nngr28/app-bn2wrjsgz11d/20260518/end user.png",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/eu_p1.jpg",
       isRepresentative: true,
     },
     {
@@ -258,7 +258,7 @@ const enterprise_buyers: AudiencePanel = {
       weight_pct: 9.1,
       background: "Legal operations manager at a 200-person company. Manages contract lifecycle and vendor relationships.",
       evaluation_lens: "Evaluates workflow integration, output format, collaboration features, and whether junior team members can use this without supervision.",
-      image: "",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/eu_p2.jpg",
       isRepresentative: false,
     },
     {
@@ -269,7 +269,7 @@ const enterprise_buyers: AudiencePanel = {
       weight_pct: 9.1,
       background: "Senior legal associate who currently does most of the contract review manually. Resistant to tools that create more work.",
       evaluation_lens: "Evaluates whether the output requires heavy verification, whether the UI is actually faster than manual review, and whether it will embarrass him if it's wrong.",
-      image: "",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/eu_p3.jpg",
       isRepresentative: false,
     },
   ],
@@ -278,7 +278,7 @@ const enterprise_buyers: AudiencePanel = {
 const hiring_managers: AudiencePanel = {
   key: "hiring_managers",
   label: "Hiring Managers at Tech Companies",
-  image: "https://miaoda-conversation-file.s3cdn.medo.dev/user-bkod68nngr28/app-bn2wrjsgz11d/20260518/hiring managers.png",
+  image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/hiring_managers.jpg",
   personas: [
     {
       key: "em_p1",
@@ -288,7 +288,7 @@ const hiring_managers: AudiencePanel = {
       weight_pct: 13.2,
       background: "Senior engineering manager at a major tech company. Reviews 300+ resumes per year. Pattern-matches instantly to strong candidates.",
       evaluation_lens: "Evaluates technical depth, ownership evidence, and whether impact claims are specific and credible.",
-      image: "https://miaoda-conversation-file.s3cdn.medo.dev/user-bkod68nngr28/app-bn2wrjsgz11d/20260518/senior engineering manager.png",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/em_p1.jpg",
       isRepresentative: true,
     },
     {
@@ -299,7 +299,7 @@ const hiring_managers: AudiencePanel = {
       weight_pct: 11.8,
       background: "Engineering manager at a 150-person startup. Hires for generalist engineers who can wear multiple hats.",
       evaluation_lens: "Evaluates breadth vs. depth balance, startup readiness signals, and whether the candidate has operated in ambiguous environments.",
-      image: "",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/em_p2.jpg",
       isRepresentative: false,
     },
     {
@@ -310,7 +310,7 @@ const hiring_managers: AudiencePanel = {
       weight_pct: 11.8,
       background: "HR screener processing 150 resumes per week for a high-growth company. 10-second skim discipline.",
       evaluation_lens: "Evaluates baseline requirements match, formatting clarity, red flag detection, and ATS keyword optimisation.",
-      image: "https://miaoda-conversation-file.s3cdn.medo.dev/user-bkod68nngr28/app-bn2wrjsgz11d/20260518/hr screener.png",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/hr_p1.jpg",
       isRepresentative: true,
     },
     {
@@ -321,7 +321,7 @@ const hiring_managers: AudiencePanel = {
       weight_pct: 9.2,
       background: "Junior talent coordinator doing first-pass filtering. Passes resumes to hiring manager based on explicit criteria only.",
       evaluation_lens: "Strict criteria matching. If the requirement isn't clearly met on the page, fails the candidate.",
-      image: "",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/hr_p2.jpg",
       isRepresentative: false,
     },
     {
@@ -332,7 +332,7 @@ const hiring_managers: AudiencePanel = {
       weight_pct: 11.8,
       background: "Senior SWE who has participated in 30+ hiring loops. Informal veto power. Values intellectual honesty.",
       evaluation_lens: "Evaluates whether described projects show genuine technical judgment, and whether the candidate would make her better at her job.",
-      image: "https://miaoda-conversation-file.s3cdn.medo.dev/user-bkod68nngr28/app-bn2wrjsgz11d/20260518/potential temmate.png",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/peer_p1.jpg",
       isRepresentative: true,
     },
     {
@@ -343,7 +343,7 @@ const hiring_managers: AudiencePanel = {
       weight_pct: 10.5,
       background: "Staff engineer who built the team's core infrastructure. Highly sceptical of resume language that sounds impressive but describes commodity work.",
       evaluation_lens: "Evaluates technical specificity, evidence of systems thinking, and whether the impact numbers are plausible given the described role.",
-      image: "",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/peer_p2.jpg",
       isRepresentative: false,
     },
     {
@@ -354,7 +354,7 @@ const hiring_managers: AudiencePanel = {
       weight_pct: 11.8,
       background: "Director managing 4 teams. Evaluates candidates two levels below. Cares about long-term leadership trajectory.",
       evaluation_lens: "Evaluates scope growth trajectory, evidence of cross-functional influence, and whether the candidate shows signs of future leadership.",
-      image: "https://miaoda-conversation-file.s3cdn.medo.dev/user-bkod68nngr28/app-bn2wrjsgz11d/20260518/skip-level director (1).png",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/skip_p1.jpg",
       isRepresentative: true,
     },
     {
@@ -365,7 +365,7 @@ const hiring_managers: AudiencePanel = {
       weight_pct: 10.5,
       background: "External technical recruiter placing 60 engineers per year. Has seen this resume against 500 similar ones this quarter.",
       evaluation_lens: "Evaluates competitive positioning, ATS optimisation, career narrative clarity, and likely interview pass rate.",
-      image: "https://miaoda-conversation-file.s3cdn.medo.dev/user-bkod68nngr28/app-bn2wrjsgz11d/20260518/recruiter (1).png",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/rec_p1.jpg",
       isRepresentative: true,
     },
     {
@@ -376,7 +376,7 @@ const hiring_managers: AudiencePanel = {
       weight_pct: 9.2,
       background: "Internal recruiter at a Series C company. Measures herself on time-to-offer and candidate quality.",
       evaluation_lens: "Evaluates whether this candidate would pass the hiring manager's phone screen, and whether the resume gives her enough to sell the candidate internally.",
-      image: "",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/rec_p2.jpg",
       isRepresentative: false,
     },
   ],
@@ -385,7 +385,7 @@ const hiring_managers: AudiencePanel = {
 const series_a_investors: AudiencePanel = {
   key: "series_a_investors",
   label: "Series A Investors",
-  image: "https://miaoda-conversation-file.s3cdn.medo.dev/user-bkod68nngr28/app-bn2wrjsgz11d/20260518/series A.png",
+  image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/series_a_investors.jpg",
   personas: [
     {
       key: "lp_p1",
@@ -395,7 +395,7 @@ const series_a_investors: AudiencePanel = {
       weight_pct: 12,
       background: "Lead partner at a $400M Series A fund. Has led 35 deals. Sets the bar for investment committee approval.",
       evaluation_lens: "Evaluates PMF evidence rigorously, growth trajectory sustainability, GTM scalability, and team completeness for this stage.",
-      image: "https://miaoda-conversation-file.s3cdn.medo.dev/user-bkod68nngr28/app-bn2wrjsgz11d/20260518/Lead Partner.png",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/lp_p1.jpg",
       isRepresentative: true,
     },
     {
@@ -406,7 +406,7 @@ const series_a_investors: AudiencePanel = {
       weight_pct: 10.8,
       background: "MD at a fund specialising in enterprise software. Has led 20 Series A deals in B2B. Deep GTM pattern recognition.",
       evaluation_lens: "Weights enterprise GTM maturity heavily. Evaluates whether the team can build and manage an enterprise sales function.",
-      image: "",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/lp_p2.jpg",
       isRepresentative: false,
     },
     {
@@ -417,7 +417,7 @@ const series_a_investors: AudiencePanel = {
       weight_pct: 10.8,
       background: "Investment associate writing the full investment memo. Will surface every risk, inconsistency, and assumption gap.",
       evaluation_lens: "Exhaustive diligence focus. Finds every number that doesn't reconcile, every claim without a source, every assumption without a test.",
-      image: "https://miaoda-site-img.s3cdn.medo.dev/images/KLing_ed9bc0d9-5f9d-4942-a72d-f3872190e711.jpg",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/assoc_p1.jpg",
       isRepresentative: true,
     },
     {
@@ -428,7 +428,7 @@ const series_a_investors: AudiencePanel = {
       weight_pct: 8.4,
       background: "Associate focused on market research and competitive mapping. Has built competitor matrices for 50+ deals.",
       evaluation_lens: "Evaluates named and unnamed competitors, differentiation sustainability, and whether the competitive slide represents the full landscape.",
-      image: "",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/assoc_p2.jpg",
       isRepresentative: false,
     },
     {
@@ -439,7 +439,7 @@ const series_a_investors: AudiencePanel = {
       weight_pct: 10.8,
       background: "Founder of a $30M ARR B2B SaaS company in the fund's portfolio. Informally consulted on deals in her domain.",
       evaluation_lens: "Evaluates operational reality of the plan. Spots naive assumptions about enterprise sales cycles, customer success costs, and GTM timeline.",
-      image: "https://miaoda-site-img.s3cdn.medo.dev/images/KLing_b8b4e9e6-24d2-468f-95bd-39ee687ce670.jpg",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/pf_p1.jpg",
       isRepresentative: true,
     },
     {
@@ -450,7 +450,7 @@ const series_a_investors: AudiencePanel = {
       weight_pct: 9.6,
       background: "Founder who built and sold a legal workflow product. Has domain-specific knowledge of what works and what doesn't in legal tech.",
       evaluation_lens: "Evaluates domain assumptions with high specificity. Knows the real sales cycle for legal software, typical churn patterns, and buyer psychology.",
-      image: "",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/pf_p2.jpg",
       isRepresentative: false,
     },
     {
@@ -461,7 +461,7 @@ const series_a_investors: AudiencePanel = {
       weight_pct: 10.8,
       background: "Partner who specialises in market sizing and timing. Has seen the legal AI space since 2015 and knows multiple failed attempts.",
       evaluation_lens: "Evaluates bottom-up market derivation, competitive timing, and whether this is different from prior legal AI waves.",
-      image: "",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/ms_p1.jpg",
       isRepresentative: true,
     },
     {
@@ -472,7 +472,7 @@ const series_a_investors: AudiencePanel = {
       weight_pct: 8.4,
       background: "Partner focused on defensibility and competitive dynamics. Evaluates whether the moat lasts 3–5 years or gets commoditised.",
       evaluation_lens: "Evaluates moat durability, commoditisation risk, and whether the AI advantage persists as foundation models improve.",
-      image: "",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/ms_p2.jpg",
       isRepresentative: false,
     },
     {
@@ -483,7 +483,7 @@ const series_a_investors: AudiencePanel = {
       weight_pct: 9.6,
       background: "Operational partner who works with portfolio companies post-investment. Evaluates execution risk and capital efficiency.",
       evaluation_lens: "Evaluates whether the milestone plan is realistic given the raise amount, hiring plan coherence, and post-investment operational risks.",
-      image: "https://miaoda-site-img.s3cdn.medo.dev/images/KLing_ce858c2a-42a5-432c-a0a6-9decbe3e7f82.jpg",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/op_p1.jpg",
       isRepresentative: true,
     },
     {
@@ -494,7 +494,7 @@ const series_a_investors: AudiencePanel = {
       weight_pct: 8.4,
       background: "VP of portfolio success. Works with 20 portfolio companies post-close. Evaluates what founders actually need vs. what they're asking for.",
       evaluation_lens: "Evaluates whether the use of funds is well-planned, whether the team knows what they don't know, and post-close support requirements.",
-      image: "",
+      image: "https://mhwnnahknclqvygrrvfa.supabase.co/storage/v1/object/public/personas/op_p2.jpg",
       isRepresentative: false,
     },
   ],

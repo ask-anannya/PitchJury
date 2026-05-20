@@ -70,7 +70,12 @@ export default function DefenceRoomPage() {
     const parts: { name: string; role: string; text: string }[] = [];
     let current: { name: string; role: string; text: string } | null = null;
     for (const line of lines) {
-      const m = line.match(/^\[([^,\]]+),([^\]]+)\]:\s*(.+)/);
+      // Try [Name, Role]: text format first
+      let m = line.match(/^\[([^,\]]+),([^\]]+)\]:\s*(.+)/);
+      if (!m) {
+        // Also try "Name, Role: text" without brackets (common Gemini output)
+        m = line.match(/^([^:]+),\s*([^:]+):\s*(.+)/);
+      }
       if (m) {
         if (current) parts.push(current);
         current = { name: m[1].trim(), role: m[2].trim(), text: m[3].trim() };
@@ -89,20 +94,9 @@ export default function DefenceRoomPage() {
     return match?.key;
   };
 
-  // Strip markdown bold markers and replace with styled spans
+  // Strip all asterisks from AI-generated text
   const renderStyledText = (text: string) => {
-    const parts = text.split(/(\*\*[^*]+\*\*)/g);
-    return parts.map((part, i) => {
-      if (part.startsWith('**') && part.endsWith('**')) {
-        const inner = part.slice(2, -2);
-        return (
-          <span key={i} className="font-bold" style={{ color: '#C9A84C' }}>
-            {inner}
-          </span>
-        );
-      }
-      return <span key={i}>{part}</span>;
-    });
+    return <span>{text.replace(/\*/g, '')}</span>;
   };
 
   const handleSend = async () => {
@@ -285,7 +279,7 @@ export default function DefenceRoomPage() {
         </div>
 
         {/* PERSONAS */}
-        <div className="absolute left-[6%] right-[6%] flex justify-around items-end" style={{ bottom: 'calc(36% + 58px)' }}>
+        <div className="absolute left-[4%] right-[4%] flex justify-around items-end" style={{ bottom: 'calc(36% + 52px)' }}>
           {panel.map((p, i) => (
             <div
               key={p.key}
@@ -297,11 +291,9 @@ export default function DefenceRoomPage() {
                 transitionDelay: entranceDone ? `${i * 0.14}s` : '0s',
               }}
             >
-              {/* spotlight cone */}
-              <div className="absolute bottom-[-20px] left-1/2 -translate-x-1/2 w-[90px] h-[110px] pointer-events-none -z-10" style={{ background: 'radial-gradient(ellipse at 50% 0%,rgba(255,235,180,0.1) 0%,transparent 70%)' }} />
               {/* speech bubble */}
               {bubbleTexts[p.key] && (
-                <div className="absolute bottom-[calc(100%+8px)] left-1/2 -translate-x-1/2 w-[160px] z-20 animate-[bubbleIn_0.25s_ease] rounded-lg p-2 text-[11.5px] leading-relaxed" style={{ background: 'rgba(245,240,232,0.95)', border: '1.5px solid #C9A84C', color: '#1A0A04', boxShadow: '0 4px 20px rgba(0,0,0,0.4)' }}>
+                <div className="absolute bottom-[calc(100%+4px)] left-1/2 -translate-x-1/2 w-[170px] z-20 animate-[bubbleIn_0.25s_ease] rounded-lg p-2.5 text-[11.5px] leading-relaxed" style={{ background: 'rgba(245,240,232,0.95)', border: '1.5px solid #C9A84C', color: '#1A0A04', boxShadow: '0 4px 20px rgba(0,0,0,0.4)' }}>
                   {bubbleTexts[p.key] === '…' ? (
                     <div className="flex gap-1 items-center h-4">
                       {[0, 1, 2].map((j) => (
@@ -314,23 +306,31 @@ export default function DefenceRoomPage() {
                   <div className="absolute top-full left-1/2 -translate-x-1/2 border-[7px] border-transparent" style={{ borderTopColor: '#C9A84C' }} />
                 </div>
               )}
-              {/* avatar */}
+              {/* name label — above avatar */}
+              <div className="mb-[6px] font-['Playfair_Display'] text-[9px] font-bold tracking-[0.12em] uppercase text-center leading-tight max-w-[95px]" style={{ color: '#C9A84C', textShadow: '0 0 10px rgba(201,168,76,0.5)' }}>
+                {p.name}
+              </div>
+              {/* avatar — bigger, fills card */}
               <div
-                className="w-[72px] h-[90px] rounded-md overflow-hidden relative transition-all duration-300 bg-[#1a1510]"
+                className="w-[90px] h-[115px] rounded-lg overflow-hidden relative transition-all duration-300"
                 style={{
-                  border: speakingKeys.includes(p.key) ? '1.5px solid #E8C97A' : '1.5px solid rgba(201,168,76,0.3)',
-                  boxShadow: speakingKeys.includes(p.key) ? '0 0 20px rgba(201,168,76,0.7), 0 0 40px rgba(201,168,76,0.3)' : 'none',
+                  background: '#1a1510',
+                  border: speakingKeys.includes(p.key) ? '2px solid #E8C97A' : '1.5px solid rgba(201,168,76,0.35)',
+                  boxShadow: speakingKeys.includes(p.key)
+                    ? '0 0 24px rgba(201,168,76,0.6), 0 0 48px rgba(201,168,76,0.25), inset 0 0 20px rgba(201,168,76,0.08)'
+                    : '0 4px 12px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04)',
                 }}
               >
                 <img
                   src={p.image}
                   alt={p.name}
-                  className="w-full h-full object-contain object-bottom"
+                  className="w-full h-full object-cover object-center"
                 />
+                {/* subtle vignette */}
+                <div className="absolute inset-0 pointer-events-none" style={{ boxShadow: 'inset 0 -20px 20px rgba(10,8,6,0.4), inset 0 0 0 1px rgba(201,168,76,0.08)' }} />
               </div>
-              <div className="mt-[5px] font-['Playfair_Display'] text-[8.5px] font-bold tracking-[0.1em] uppercase text-center leading-tight max-w-[80px]" style={{ color: '#C9A84C', textShadow: '0 0 8px rgba(201,168,76,0.4)' }}>
-                {p.name}
-              </div>
+              {/* spotlight cone */}
+              <div className="absolute bottom-[-14px] left-1/2 -translate-x-1/2 w-[100px] h-[90px] pointer-events-none -z-10" style={{ background: 'radial-gradient(ellipse at 50% 0%,rgba(255,235,180,0.1) 0%,transparent 70%)' }} />
             </div>
           ))}
         </div>
@@ -348,34 +348,54 @@ export default function DefenceRoomPage() {
           </div>
 
           {/* messages */}
-          <div className="flex-1 overflow-y-auto px-5 py-2 flex flex-col gap-2" style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(201,168,76,0.2) transparent' }}>
-            {messages.map((msg, idx) => (
-              <div key={idx} className={`flex gap-2 items-start max-w-[85%] animate-[msgIn_0.25s_ease] ${msg.role === 'user' ? 'self-end flex-row-reverse' : ''}`}>
-                {msg.role === 'user' ? (
-                  <div className="w-[26px] h-[26px] rounded overflow-hidden shrink-0 flex items-center justify-center" style={{ border: '1px solid rgba(201,168,76,0.25)', background: 'rgba(201,168,76,0.15)' }}>
-                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#C9A84C" strokeWidth="1.5">
-                      <circle cx="12" cy="8" r="4" />
-                      <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
-                    </svg>
+          <div className="flex-1 overflow-y-auto px-5 py-3 flex flex-col gap-3" style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(201,168,76,0.2) transparent' }}>
+            {messages.map((msg, idx) => {
+              // For panel messages, find the specific speaker avatar
+              const speakerPersona = msg.role === 'panel' && msg.speaker
+                ? panel.find((p) => msg.speaker!.toLowerCase().includes(p.name.toLowerCase()))
+                : null;
+              return (
+                <div
+                  key={idx}
+                  className={`flex gap-3 items-start max-w-[92%] animate-[msgIn_0.25s_ease] ${msg.role === 'user' ? 'self-end flex-row-reverse' : ''}`}
+                >
+                  {msg.role === 'user' ? (
+                    <div className="w-[32px] h-[32px] rounded overflow-hidden shrink-0 flex items-center justify-center" style={{ border: '1px solid rgba(201,168,76,0.25)', background: 'rgba(201,168,76,0.15)' }}>
+                      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#C9A84C" strokeWidth="1.5">
+                        <circle cx="12" cy="8" r="4" />
+                        <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+                      </svg>
+                    </div>
+                  ) : (
+                    <div className="w-[32px] h-[40px] rounded overflow-hidden shrink-0 bg-[#1a1510]" style={{ border: '1px solid rgba(201,168,76,0.25)' }}>
+                      <img
+                        src={speakerPersona?.image || panel[0]?.image || ''}
+                        alt={msg.speaker || 'Panel'}
+                        className="w-full h-full object-contain object-bottom"
+                      />
+                    </div>
+                  )}
+                  <div
+                    className="py-3 px-4 rounded-xl text-[13.5px] leading-relaxed shadow-lg"
+                    style={{
+                      fontFamily: "'Cormorant Garamond', serif",
+                      background: msg.role === 'user' ? 'rgba(201,168,76,0.14)' : 'rgba(20,30,50,0.85)',
+                      border: msg.role === 'user' ? '1.5px solid rgba(201,168,76,0.35)' : '1.5px solid rgba(201,168,76,0.22)',
+                      color: msg.role === 'user' ? '#E8C97A' : 'rgba(245,240,232,0.92)',
+                      backdropFilter: 'blur(4px)',
+                    }}
+                  >
+                    <span
+                      className="text-[10px] font-bold tracking-[0.1em] uppercase block mb-1.5"
+                      style={{ color: '#C9A84C' }}
+                    >
+                      {msg.speaker}
+                    </span>
+                    {renderStyledText(msg.content)}
                   </div>
-                ) : (
-                  <div className="w-[26px] h-[26px] rounded overflow-hidden shrink-0" style={{ border: '1px solid rgba(201,168,76,0.25)' }}>
-                    <img src={panel[0]?.image || ''} alt="" className="w-full h-full object-cover object-top" />
-                  </div>
-                )}
-                <div className="py-[7px] px-[11px] rounded-lg text-[13px] leading-relaxed" style={{
-                  fontFamily: "'Cormorant Garamond', serif",
-                  background: msg.role === 'user' ? 'rgba(201,168,76,0.12)' : 'rgba(245,240,232,0.07)',
-                  border: msg.role === 'user' ? '1px solid rgba(201,168,76,0.3)' : '1px solid rgba(201,168,76,0.18)',
-                  color: msg.role === 'user' ? '#E8C97A' : 'rgba(245,240,232,0.9)',
-                }}>
-                  <span className="text-[10px] font-semibold tracking-[0.08em] uppercase block mb-[3px]" style={{ color: '#C9A84C' }}>
-                    {msg.speaker}
-                  </span>
-                  {renderStyledText(msg.content)}
                 </div>
-              </div>
-            ))}
+              );
+            })}
             <div ref={messagesEndRef} />
           </div>
 
