@@ -319,6 +319,16 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         setSession((prev) => ({ ...prev, sessionId }));
       }
 
+      if (typeof pendo !== 'undefined') {
+        pendo.track('focus_group_started', {
+          session_id: sessionId,
+          audience_category: session.audienceCategory,
+          harshness_level: session.harshnessLevel,
+          document_length: session.extractedDocumentText.length,
+          persona_count: session.activePersonas.length,
+        });
+      }
+
       const totalPersonas = session.activePersonas.length;
 
       // AI Action 1: Parallel simulation calls per persona
@@ -727,6 +737,27 @@ RULES:
 
       setSession((prev) => ({ ...prev, deepAnalysisJson: deepAnalysisData }));
       await updateSession(sessionId, { deep_analysis_json: deepAnalysisData });
+
+      if (typeof pendo !== 'undefined') {
+        const killCount = Object.values(quantData.kill_criteria_frequency || {}).filter(
+          (v) => v.severity === 'High'
+        ).length;
+        pendo.track('simulation_completed', {
+          session_id: sessionId,
+          audience_category: session.audienceCategory,
+          harshness_level: session.harshnessLevel,
+          total_personas: totalPersonas,
+          completed_personas: simOutputs.length,
+          aggregate_score: quantData.aggregate_score,
+          weighted_score: quantData.weighted_score,
+          score_std_deviation: quantData.score_std_deviation,
+          proceed_rate: quantData.proceed_rate,
+          panel_alignment: quantData.panel_alignment,
+          consensus_verdict: (quantData.consensus_verdict || '').slice(0, 80),
+          strategic_verdict_label: deepAnalysisData.strategic_verdict?.label || '',
+          kill_criteria_count: killCount,
+        });
+      }
     } catch (error) {
       console.error('Focus group error:', error);
       throw error;
@@ -797,6 +828,16 @@ Output format:
       const shareUrl = `${window.location.origin}/card/${sessionId}`;
       setSession((prev) => ({ ...prev, shareUrl }));
       await updateSession(sessionId, { share_url: shareUrl });
+
+      if (typeof pendo !== 'undefined') {
+        pendo.track('shareable_card_generated', {
+          session_id: sessionId,
+          audience_category: session.audienceCategory,
+          aggregate_score: session.aggregateScore ?? 0,
+          consensus_verdict: (session.consensusVerdict || '').slice(0, 80),
+          persona_count: session.simulationOutputs.length,
+        });
+      }
     } finally {
       setSession((prev) => ({ ...prev, isLoading: false, loadingMessage: '' }));
     }

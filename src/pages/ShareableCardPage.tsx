@@ -30,7 +30,7 @@ function getScoreColorValue(score: number): string {
 export default function ShareableCardPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { resetSession } = useSession();
+  const { resetSession, session } = useSession();
   const [cardData, setCardData] = useState<CardData | null>(null);
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -87,11 +87,19 @@ export default function ShareableCardPage() {
     }
   };
 
-  const copyToClipboard = (text: string) => {
+  const copyToClipboard = (text: string, shareMethod: string) => {
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
     toast.success('Copied to clipboard');
+
+    if (typeof pendo !== 'undefined') {
+      pendo.track('verdict_shared', {
+        session_id: id || '',
+        share_method: shareMethod,
+        aggregate_score: cardData?.aggregate_score ?? 0,
+      });
+    }
   };
 
   if (loading) {
@@ -169,7 +177,7 @@ export default function ShareableCardPage() {
         <Button
           variant="outline"
           className="flex items-center gap-2"
-          onClick={() => copyToClipboard(cardData.share_text)}
+          onClick={() => copyToClipboard(cardData.share_text, 'share_text')}
         >
           {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
           {copied ? 'Copied' : 'Copy Share Text'}
@@ -177,7 +185,7 @@ export default function ShareableCardPage() {
         <Button
           variant="outline"
           className="flex items-center gap-2"
-          onClick={() => copyToClipboard(window.location.href)}
+          onClick={() => copyToClipboard(window.location.href, 'link')}
         >
           <Share2 className="w-4 h-4" />
           Copy Link
@@ -191,6 +199,13 @@ export default function ShareableCardPage() {
           variant="ghost"
           className="flex items-center gap-2 px-8 border border-primary/40 hover:bg-primary/5"
           onClick={() => {
+            if (typeof pendo !== 'undefined') {
+              pendo.track('session_reset', {
+                previous_session_id: id || '',
+                previous_audience_category: session.audienceCategory || '',
+                previous_aggregate_score: cardData?.aggregate_score ?? 0,
+              });
+            }
             resetSession();
             navigate('/');
           }}

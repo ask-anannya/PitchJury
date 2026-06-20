@@ -50,6 +50,18 @@ export default function ExtractorPage() {
         toast.success('Text extracted successfully');
       }
       setResult(extractionResult);
+
+      if (typeof pendo !== 'undefined') {
+        pendo.track('pdf_text_extracted', {
+          file_name: file.name,
+          file_size_bytes: file.size,
+          page_count: extractionResult.pageCount,
+          is_ocr: extractionResult.isOcr,
+          extracted_text_length: extractionResult.text?.length ?? 0,
+          extraction_success: !extractionResult.error,
+          has_text: !!extractionResult.text,
+        });
+      }
     } catch (error: any) {
       console.error('Extraction error:', error);
       toast.error(`Failed to extract text from PDF: ${error?.message || String(error)}`);
