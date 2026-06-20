@@ -44,6 +44,17 @@ export default function SetupPage() {
         setLocalText(result.text);
         setDocumentText(result.text);
         toast.success('Text extracted successfully');
+
+        if (typeof pendo !== 'undefined') {
+          pendo.track('document_uploaded', {
+            file_name: selectedFile.name,
+            file_size_bytes: selectedFile.size,
+            page_count: result.pageCount,
+            is_ocr: result.isOcr,
+            extracted_text_length: result.text.length,
+            extraction_success: true,
+          });
+        }
       }
     } catch (err: any) {
       toast.error(`Failed to extract text from PDF: ${err?.message || String(err)}`);

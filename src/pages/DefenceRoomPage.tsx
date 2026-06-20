@@ -110,6 +110,14 @@ export default function DefenceRoomPage() {
     setMessages((prev) => [...prev, userMsg]);
     await addDefenceMessage(userMsg);
 
+    if (typeof pendo !== 'undefined') {
+      pendo.track('defence_message_sent', {
+        session_id: session.sessionId || '',
+        audience_category: session.audienceCategory,
+        exchange_number: 6 - exchanges,
+        exchanges_remaining: exchanges - 1,
+        message_length: text.length,
+        total_messages_so_far: messages.length,
     const promptMessageId = crypto.randomUUID();
     if (window.pendo?.trackAgent) {
       window.pendo.trackAgent("prompt", {
@@ -172,6 +180,15 @@ export default function DefenceRoomPage() {
 
       if (newExchanges <= 0) {
         setShowDone(true);
+
+        if (typeof pendo !== 'undefined') {
+          pendo.track('defence_session_completed', {
+            session_id: session.sessionId || '',
+            audience_category: session.audienceCategory,
+            total_messages: messages.length + 1 + parts.length,
+            aggregate_score: session.aggregateScore ?? 0,
+          });
+        }
       }
     } catch {
       toast.error('Failed to get panel response');
