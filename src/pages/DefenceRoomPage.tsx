@@ -118,6 +118,14 @@ export default function DefenceRoomPage() {
         exchanges_remaining: exchanges - 1,
         message_length: text.length,
         total_messages_so_far: messages.length,
+    const promptMessageId = crypto.randomUUID();
+    if (window.pendo?.trackAgent) {
+      window.pendo.trackAgent("prompt", {
+        agentId: "yjlExTs09g293tu--c7JYSdknyw",
+        conversationId: session.sessionId || "",
+        messageId: promptMessageId,
+        content: text,
+        suggestedPrompt: false,
       });
     }
 
@@ -157,6 +165,15 @@ export default function DefenceRoomPage() {
         setMessages((prev) => [...prev, panelMsg]);
         addDefenceMessage(panelMsg);
       });
+
+      if (window.pendo?.trackAgent) {
+        window.pendo.trackAgent("agent_response", {
+          agentId: "yjlExTs09g293tu--c7JYSdknyw",
+          conversationId: session.sessionId || "",
+          messageId: crypto.randomUUID(),
+          content: parts.map((p) => `${p.name}: ${p.text}`).join('\n'),
+        });
+      }
 
       const newExchanges = exchanges - 1;
       setExchanges(newExchanges);
