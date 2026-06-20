@@ -401,7 +401,33 @@ CRITICAL RULES:
       // Batched parallel calls: groups of 3 personas max per batch to avoid rate limits
       const BATCH_SIZE = 3;
       const CALL_TIMEOUT = 120000; // 120s — matches edge function upstream timeout
+      const MAX_RETRIES = 2;
+      const BATCH_DELAY_MS = 1500; // brief pause between batches to ease rate limits
       const simOutputs: SimulationOutput[] = [];
+
+      const callWithRetry = async (prompt: string): Promise<SimulationOutput | null> => {
+        for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+          try {
+            if (attempt > 0) await new Promise((r) => setTimeout(r, attempt * 2000));
+            const text = await Promise.race([
+              callAiAction(prompt),
+              new Promise<never>((_, reject) =>
+                setTimeout(() => reject(new Error('timeout')), CALL_TIMEOUT)
+              ),
+            ]);
+            const clean = cleanJson(text);
+            return JSON.parse(clean) as SimulationOutput;
+          } catch (err) {
+            const msg = err instanceof Error ? err.message : String(err);
+            if (attempt === MAX_RETRIES) {
+              console.error(`Persona simulation failed after ${MAX_RETRIES + 1} attempts:`, msg);
+              return null;
+            }
+            console.warn(`Persona attempt ${attempt + 1} failed, retrying:`, msg);
+          }
+        }
+        return null;
+      };
 
       for (let batchStart = 0; batchStart < simPrompts.length; batchStart += BATCH_SIZE) {
         const batchEnd = Math.min(batchStart + BATCH_SIZE, simPrompts.length);
@@ -412,25 +438,9 @@ CRITICAL RULES:
           loadingMessage: `Reading your document (${Math.min(batchEnd, totalPersonas)} of ${totalPersonas})...`,
         }));
 
-        const batchResults = await Promise.all(
-          batch.map(async (prompt) => {
-            try {
-              const text = await Promise.race([
-                callAiAction(prompt),
-                new Promise<never>((_, reject) =>
-                  setTimeout(() => reject(new Error('timeout')), CALL_TIMEOUT)
-                ),
-              ]);
-              const clean = cleanJson(text);
-              const sim = JSON.parse(clean) as SimulationOutput;
-              return sim;
-            } catch (err) {
-              const msg = err instanceof Error ? err.message : String(err);
-              console.error(`Persona simulation failed (${batchStart + batch.indexOf(prompt) + 1}):`, msg);
-              return null;
-            }
-          })
-        );
+        if (batchStart > 0) await new Promise((r) => setTimeout(r, BATCH_DELAY_MS));
+
+        const batchResults = await Promise.all(batch.map(callWithRetry));
 
         const validBatch = batchResults.filter(Boolean) as SimulationOutput[];
         simOutputs.push(...validBatch);
