@@ -110,6 +110,17 @@ export default function DefenceRoomPage() {
     setMessages((prev) => [...prev, userMsg]);
     await addDefenceMessage(userMsg);
 
+    const promptMessageId = crypto.randomUUID();
+    if (window.pendo?.trackAgent) {
+      window.pendo.trackAgent("prompt", {
+        agentId: "yjlExTs09g293tu--c7JYSdknyw",
+        conversationId: session.sessionId || "",
+        messageId: promptMessageId,
+        content: text,
+        suggestedPrompt: false,
+      });
+    }
+
     // Pick random speakers for typing animation
     const shuffled = [...panel].sort(() => Math.random() - 0.5);
     const typingSpeakers = shuffled.slice(0, 2).map((p) => p.key);
@@ -146,6 +157,15 @@ export default function DefenceRoomPage() {
         setMessages((prev) => [...prev, panelMsg]);
         addDefenceMessage(panelMsg);
       });
+
+      if (window.pendo?.trackAgent) {
+        window.pendo.trackAgent("agent_response", {
+          agentId: "yjlExTs09g293tu--c7JYSdknyw",
+          conversationId: session.sessionId || "",
+          messageId: crypto.randomUUID(),
+          content: parts.map((p) => `${p.name}: ${p.text}`).join('\n'),
+        });
+      }
 
       const newExchanges = exchanges - 1;
       setExchanges(newExchanges);
