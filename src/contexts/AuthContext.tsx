@@ -71,6 +71,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(session?.user ?? null);
       if (session?.user) {
         getProfile(session.user.id).then(setProfile);
+        pendo.identify({
+          visitor: {
+            id: session.user.id,
+            email: session.user.email
+          }
+        });
       } else {
         setProfile(null);
       }
@@ -113,6 +119,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await supabase.auth.signOut();
     setUser(null);
     setProfile(null);
+    pendo.clearSession();
   };
 
   return (
