@@ -11,3 +11,4 @@ interface Pendo {
 interface Window {
   pendo?: Pendo;
 }
+declare var pendo: any;
